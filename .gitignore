@@ -1,0 +1,62 @@
+# Общие для .NET
+[Oo]bj/
+[Bb]in/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.vs
+*.vscode
+
+# Файлы конфигурации с секретами
+appsettings.json
+appsettings.Production.json
+secrets.json
+
+# Но можно оставить example-файлы
+!appsettings.Development.json.example
+
+# Временные файлы тестов
+TestResults/
+
+# Результаты покрытия кода
+coverage/
+*.coverage
+*.coverage.xml
+
+# Файлы, создаваемые инструментами
+*.cache
+*.log
+*.tmp
+*.temp
+
+# Файлы базы данных (если случайно окажутся в проекте)
+*.mdf
+*.ldf
+*.sdf
+
+# Файлы резервных копий
+*.bak
+*.backup
+
+# Файлы отладки и профилирования
+*.dotMemoryUnit
+*.pidb
+*.svclog
+
+# Директории пакетов NuGet (если используется packages folder)
+packages/
+
+# Файлы, специфичные для Rider / IntelliJ IDEA
+.idea/
+*.sln.iml
+
+# Файлы, специфичные для VS Code
+.vscode/
+
+# Файлы локальных настроек
+launchSettings.json
+Properties/launchSettings.json
+
+# Папка с опубликованным приложением
+publish/
