@@ -88,10 +88,10 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("libraries", tb => tb.HasComment("Филиалы библиотек"));
 
-            entity.HasIndex(e => e.Name, "libraries_name_key").IsUnique();
+            entity.HasIndex(e => e.Name, "libraries_name_key");
 
             entity.Property(e => e.LibraryId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasComment("Уникальный идентификатор библиотеки")
                 .HasColumnName("library_id");
             entity.Property(e => e.Address)
@@ -115,7 +115,7 @@ public partial class AppDbContext : DbContext
             entity.ToTable("loans", tb => tb.HasComment("Выдачи книг читателям"));
 
             entity.Property(e => e.LoanId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasComment("Уникальный номер записи о выдаче")
                 .HasColumnName("loan_id");
             entity.Property(e => e.Advance)
@@ -154,7 +154,7 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.Name, "publishers_name_key").IsUnique();
 
             entity.Property(e => e.PublisherId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("publisher_id");
             entity.Property(e => e.City)
                 .HasMaxLength(100)
@@ -173,7 +173,7 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.Phone, "readers_phone_key").IsUnique();
 
             entity.Property(e => e.ReaderId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("reader_id");
             entity.Property(e => e.Address)
                 .HasMaxLength(200)
@@ -196,7 +196,7 @@ public partial class AppDbContext : DbContext
             entity.HasIndex(e => e.Name, "subjects_name_key").IsUnique();
 
             entity.Property(e => e.SubjectId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("subject_id");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)

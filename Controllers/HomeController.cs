@@ -13,19 +13,6 @@ public class HomeController(AppDbContext context) : Controller
         return View();
     }
 
-    public async Task<ActionResult<IEnumerable<Book>>> GetBooks()
-    {
-        Console.WriteLine(string.Join(", ", context.Books.ToList()));
-        return await context.Books.ToListAsync();
-    }
-    
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Library>>> GetLibraries()
-    {
-        Console.WriteLine(string.Join(", ", context.Libraries.ToList()));
-        return await context.Libraries.ToListAsync();
-    }
-
     public IActionResult Privacy()
     {
         return View();

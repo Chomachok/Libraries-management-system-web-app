@@ -31,7 +31,7 @@ app.MapControllerRoute(
     .WithStaticAssets();
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Libraries}/{action=GetLibraries}")
+        pattern: "{controller=Libraries}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 
