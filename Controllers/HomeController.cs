@@ -1,12 +1,10 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using LibrariesWebApp.Models;
-using LibrariesWebApp.Data;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibrariesWebApp.Controllers;
 
-public class HomeController(AppDbContext context) : Controller
+public class HomeController : Controller
 {
     public IActionResult Index()
     {
