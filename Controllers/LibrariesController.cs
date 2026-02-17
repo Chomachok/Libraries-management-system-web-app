@@ -18,7 +18,7 @@ public class LibrariesController(AppDbContext context) : Controller
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Library>>> Index()
     {
-        return await context.Libraries.ToListAsync();
+        return View(await context.Libraries.ToListAsync());
     }
 
     /// <summary>
