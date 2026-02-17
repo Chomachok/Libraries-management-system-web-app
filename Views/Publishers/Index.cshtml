@@ -1,0 +1,18 @@
+@model IEnumerable<LibrariesWebApp.Models.Publisher>
+
+@{
+    ViewData["Title"] = "Publishers";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<body>
+    @foreach (var publisher in Model)
+    {
+        <tr>
+            <td>@publisher.PublisherId</td>
+            <td>@publisher.Name</td>
+            <td>@publisher.City</td>
+        </tr>
+    }
+</body>
