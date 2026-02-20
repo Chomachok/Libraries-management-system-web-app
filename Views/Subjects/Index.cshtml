@@ -1,0 +1,17 @@
+@model IEnumerable<LibrariesWebApp.Models.Subject>
+
+@{
+    ViewData["Title"] = "Subjets";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<body>
+    @foreach (var subject in Model)
+    {
+        <tr>
+            <td>@subject.SubjectId</td>
+            <td>@subject.Name</td>
+        </tr>
+    }
+</body>

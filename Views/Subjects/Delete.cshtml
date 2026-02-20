@@ -1,0 +1,26 @@
+@model LibrariesWebApp.Models.Subject
+
+@{
+    ViewData["Title"] = "Удаление рубрики книг";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<h3>Вы уверены, что хотите удалить эту рубрику книг?</h3>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Название</dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+
+        <!-- Добавьте другие поля, если необходимо -->
+    </dl>
+
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="SubjectId" />
+        <button type="submit" class="btn btn-danger">Удалить</button>
+        <a asp-action="Index" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>
