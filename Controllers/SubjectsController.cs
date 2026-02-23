@@ -19,7 +19,7 @@ public class SubjectsController(AppDbContext context) : Controller
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Subject>>> Index()
     {
-        return await context.Subjects.ToListAsync();
+        return View(await context.Subjects.ToListAsync());
     }
     
     /// <summary>
