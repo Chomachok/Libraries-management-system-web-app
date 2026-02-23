@@ -103,7 +103,7 @@ public abstract class CrudController<TEntity, TKey> : Controller
     [ValidateAntiForgeryToken]
     public virtual async Task<IActionResult> Edit(TKey id, TEntity entity)
     {
-        if (!id.Equals(GetEntityId(entity)))
+        if (id != null && !id.Equals(GetEntityId(entity)))
             return NotFound();
 
         if (ModelState.IsValid)
@@ -166,19 +166,39 @@ public abstract class CrudController<TEntity, TKey> : Controller
     /// При необходимости может быть переопределён в производных классах.
     /// </summary>
     /// <param name="entity">Сущность, из которой извлекается ключ.</param>
-    /// <returns>Значение первичного ключа.</returns>
+    /// <returns>Значение первичного ключа (не может быть null).</returns>
+    /// <exception cref="InvalidOperationException">
+    /// Выбрасывается, если не удалось определить свойство идентификатора
+    /// или значение свойства равно null.
+    /// </exception>
     protected virtual TKey GetEntityId(TEntity entity)
     {
+        // Пытаемся найти свойство "Id" или "{ИмяСущности}Id"
         var property = typeof(TEntity).GetProperty("Id") ?? 
                        typeof(TEntity).GetProperty($"{typeof(TEntity).Name}Id");
-        return (TKey)property?.GetValue(entity);
+    
+        if (property == null)
+        {
+            throw new InvalidOperationException(
+                $"Не удалось определить свойство идентификатора для сущности {typeof(TEntity).Name}. " +
+                $"Переопределите метод GetEntityId в производном контроллере.");
+        }
+
+        var value = property.GetValue(entity);
+        if (value == null)
+        {
+            throw new InvalidOperationException(
+                $"Свойство идентификатора '{property.Name}' сущности {typeof(TEntity).Name} равно null.");
+        }
+
+        return (TKey)value;
     }
 
     /// <summary>
     /// Проверяет, существует ли сущность с указанным идентификатором.
     /// </summary>
     /// <param name="id">Идентификатор сущности.</param>
-    /// <returns>true, если сущность существует; иначе false.</returns>
+    /// <returns>True, если сущность существует; иначе false.</returns>
     protected virtual async Task<bool> EntityExists(TKey id)
     {
         return await _dbSet.FindAsync(id) != null;
