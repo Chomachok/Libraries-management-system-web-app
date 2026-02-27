@@ -1,30 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LibrariesWebApp.Data;
+using LibrariesWebApp.Services;
 
 namespace LibrariesWebApp.Controllers.Base;
 
 /// <summary>
 /// Базовый контроллер для управления сущностями (CRUD операции).
-/// Обеспечивает отображение списка, создание, редактирование и удаление записей 
-/// для любой сущности, унаследованной от данного класса.
+/// Использует сервис <see cref="ICrudService{TEntity, TKey}"/> для работы с данными.
 /// </summary>
 /// <typeparam name="TEntity">Тип сущности, с которой работает контроллер.</typeparam>
 /// <typeparam name="TKey">Тип первичного ключа сущности.</typeparam>
 public abstract class CrudController<TEntity, TKey> : Controller
     where TEntity : class
 {
-    private readonly AppDbContext _context;
-    private readonly DbSet<TEntity> _dbSet;
+    /// <summary>
+    /// Сервис для CRUD операций над сущностями.
+    /// </summary>
+    private readonly ICrudService<TEntity, TKey> _service;
 
     /// <summary>
-    /// Инициализирует новый экземпляр контроллера с контекстом базы данных.
+    /// Инициализирует новый экземпляр контроллера с указанным сервисом.
     /// </summary>
-    /// <param name="context">Контекст базы данных приложения.</param>
-    protected CrudController(AppDbContext context)
+    /// <param name="service">Сервис для работы с сущностями.</param>
+    protected CrudController(ICrudService<TEntity, TKey> service)
     {
-        _context = context;
-        _dbSet = _context.Set<TEntity>();
+        _service = service;
     }
 
     /// <summary>
@@ -34,7 +33,8 @@ public abstract class CrudController<TEntity, TKey> : Controller
     [HttpGet]
     public virtual async Task<IActionResult> Index()
     {
-        return View(await _dbSet.ToListAsync());
+        var items = await _service.GetAllAsync();
+        return View(items);
     }
 
     /// <summary>
@@ -62,8 +62,7 @@ public abstract class CrudController<TEntity, TKey> : Controller
     {
         if (ModelState.IsValid)
         {
-            _dbSet.Add(entity);
-            await _context.SaveChangesAsync();
+            await _service.CreateAsync(entity);
             return RedirectToAction(nameof(Index));
         }
         return View(entity);
@@ -80,11 +79,8 @@ public abstract class CrudController<TEntity, TKey> : Controller
     [HttpGet]
     public virtual async Task<IActionResult> Edit(TKey id)
     {
-        var entity = await _dbSet.FindAsync(id);
-        if (entity == null)
-            return NotFound();
-
-        return View(entity);
+        var entity = await _service.GetByIdAsync(id);
+        return View(entity); // entity гарантированно не null после проверки
     }
 
     /// <summary>
@@ -96,8 +92,8 @@ public abstract class CrudController<TEntity, TKey> : Controller
     /// При успешном обновлении перенаправляет на Index.
     /// При ошибках валидации возвращает представление Edit с текущим объектом 
     /// и сообщениями об ошибках.
-    /// При конфликте параллельного обновления (DbUpdateConcurrencyException) 
-    /// повторно проверяет существование записи.
+    /// Если сущность не найдена (например, удалена другим пользователем), возвращает HTTP 404 Not Found.
+    /// При других ошибках (например, конфликт конкурентного обновления) исключение пробрасывается дальше.
     /// </returns>
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -110,16 +106,14 @@ public abstract class CrudController<TEntity, TKey> : Controller
         {
             try
             {
-                _context.Update(entity);
-                await _context.SaveChangesAsync();
+                await _service.UpdateAsync(entity);
                 return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (InvalidOperationException ex) when (ex.Message == "Сущность не найдена.")
             {
-                if (!await EntityExists(id))
-                    return NotFound();
-                throw;
+                return NotFound();
             }
+            // Другие исключения (например, DbUpdateConcurrencyException) не перехватываются
         }
         return View(entity);
     }
@@ -135,11 +129,8 @@ public abstract class CrudController<TEntity, TKey> : Controller
     [HttpGet]
     public virtual async Task<IActionResult> Delete(TKey id)
     {
-        var entity = await _dbSet.FindAsync(id);
-        if (entity == null)
-            return NotFound();
-
-        return View(entity);
+        var entity = await _service.GetByIdAsync(id);
+        return View(entity); // entity гарантированно не null после проверки
     }
 
     /// <summary>
@@ -151,12 +142,7 @@ public abstract class CrudController<TEntity, TKey> : Controller
     [ValidateAntiForgeryToken]
     public virtual async Task<IActionResult> DeleteConfirmed(TKey id)
     {
-        var entity = await _dbSet.FindAsync(id);
-        if (entity != null)
-        {
-            _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
-        }
+        await _service.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
     }
 
@@ -173,10 +159,9 @@ public abstract class CrudController<TEntity, TKey> : Controller
     /// </exception>
     protected virtual TKey GetEntityId(TEntity entity)
     {
-        // Пытаемся найти свойство "Id" или "{ИмяСущности}Id"
-        var property = typeof(TEntity).GetProperty("Id") ?? 
+        var property = typeof(TEntity).GetProperty("Id") ??
                        typeof(TEntity).GetProperty($"{typeof(TEntity).Name}Id");
-    
+
         if (property == null)
         {
             throw new InvalidOperationException(
@@ -192,15 +177,5 @@ public abstract class CrudController<TEntity, TKey> : Controller
         }
 
         return (TKey)value;
-    }
-
-    /// <summary>
-    /// Проверяет, существует ли сущность с указанным идентификатором.
-    /// </summary>
-    /// <param name="id">Идентификатор сущности.</param>
-    /// <returns>True, если сущность существует; иначе false.</returns>
-    protected virtual async Task<bool> EntityExists(TKey id)
-    {
-        return await _dbSet.FindAsync(id) != null;
     }
 }

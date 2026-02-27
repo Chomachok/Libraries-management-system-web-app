@@ -1,19 +1,22 @@
 @model IEnumerable<LibrariesWebApp.Models.Library>
 
 @{
-    ViewData["Title"] = "Libraries";
+    ViewData["Title"] = "Библиотеки";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h1 style="font-size: 2rem; font-weight: 500; margin-bottom: 0.5rem;">Библиотеки города</h1>
+<p style="color: #475569; margin-bottom: 2rem;">Найдите ближайшую библиотеку или исследуйте фонды</p>
 
-<body>
+<div class="card-grid">
     @foreach (var library in Model)
     {
-        <tr>
-            <td>@library.LibraryId</td>
-            <td>@library.Name</td>
-            <td>@library.Address</td>
-            <td>@library.Phone</td>
-        </tr>
+        <div class="card" data-url="@Url.Action("Details", "Libraries", new { id = library.LibraryId })">
+            <h3 class="card-title">@library.Name</h3>
+            <div class="card-subtitle">@library.Address</div>
+            <div class="card-meta">
+                <span>📖 10000 книг</span> <!-- library.BookCount.ToString("N0") -->
+                <a href="@Url.Action("Details", "Libraries", new { id = library.LibraryId })" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
     }
-</body>
+</div>
