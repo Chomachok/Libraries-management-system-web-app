@@ -1,8 +1,8 @@
 using LibrariesWebApp.Models;
 using LibrariesWebApp.Controllers.Base;
-using LibrariesWebApp.Data;
+using LibrariesWebApp.Services;
 
 namespace LibrariesWebApp.Controllers;
 
 /// <inheritdoc />
-public class LibrariesController(AppDbContext context) : CrudController<Library, int>(context);
+public class LibrariesController(ICrudService<Library, int> service) : CrudController<Library, int>(service);
