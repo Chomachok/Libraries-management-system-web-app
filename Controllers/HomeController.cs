@@ -26,6 +26,13 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    /// <summary>
+    /// Отображает страницу с информацией о проекте.
+    /// </summary>
+    /// <returns>Представление About.</returns>
+    public IActionResult About()
+        => View();
 
     /// <summary>
     /// Отображает страницу с информацией об ошибке.
