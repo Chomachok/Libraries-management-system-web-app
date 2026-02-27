@@ -1,0 +1,48 @@
+@model LibrariesWebApp.Models.Library
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container">
+    <div class="card" style="padding: 24px;">
+        <h1 class="card-title">@Model.Name</h1>
+        <p class="card-subtitle">@Model.Address</p>
+        <p class="card-text">Телефон: @Model.Phone</p>
+    </div>
+
+    <h2 class="section-title">Книги в этой библиотеке</h2>
+
+    @if (Model.Books.Any())
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Автор</th>
+                <th>Название</th>
+                <th>Год</th>
+                <th>Количество</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var book in Model.Books)
+            {
+                <tr>
+                    <td>@book.Author</td>
+                    <td>@book.Title</td>
+                    <td>@book.Year</td>
+                    <td>@book.Quantity</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="alert alert-info">В этой библиотеке пока нет книг.</p>
+    }
+
+    <div style="margin-top: 20px;">
+        <a asp-action="Index" class="btn btn-primary">← Назад к списку библиотек</a>
+    </div>
+</div>
