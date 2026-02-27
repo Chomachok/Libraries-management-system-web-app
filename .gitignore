@@ -1,62 +1,58 @@
-# Общие для .NET
-[Oo]bj/
-[Bb]in/
+## Игнорирование артефактов сборки и временных файлов .NET
+bin/
+obj/
+packages/
+*.dll
+*.exe
+*.pdb
+
+## Игнорирование пользовательских настроек Visual Studio
+.vs/
 *.user
-*.userosscache
 *.suo
 *.userprefs
-*.vs
-*.vscode
+*.userosscache
+*.sln.docstates
 
-# Файлы конфигурации с секретами
-appsettings.json
-appsettings.Production.json
+## Игнорирование пользовательских настроек Rider / ReSharper
+.idea/
+*.DotSettings
+*.DotSettings.user
+*.sln.iml
+
+## Игнорирование файлов, создаваемых инструментами развертывания
+*.publish.xml
+*.pubxml.user
+PublishScripts/
+
+## Игнорирование файлов конфигурации, содержащих секреты и локальные настройки
+appsettings.Development.json
+appsettings.Production.json   # если содержит настоящие пароли (лучше хранить вне репозитория)
 secrets.json
+appsettings.*.Development.json
 
-# Но можно оставить example-файлы
-!appsettings.Development.json.example
-
-# Временные файлы тестов
-TestResults/
-
-# Результаты покрытия кода
-coverage/
-*.coverage
-*.coverage.xml
-
-# Файлы, создаваемые инструментами
-*.cache
+## Игнорирование временных файлов и логов
 *.log
 *.tmp
 *.temp
+/TestResults/
+coverage/
+*.trx
+*.runsettings
 
-# Файлы базы данных (если случайно окажутся в проекте)
-*.mdf
-*.ldf
-*.sdf
+## Игнорирование системных файлов
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# Файлы резервных копий
-*.bak
-*.backup
+## Игнорирование кэша и промежуточных файлов Entity Framework Core
+# Миграции EF Core (папка Migrations) обычно хранятся в репозитории, поэтому их НЕ исключаем.
+# Но временные файлы, которые могут создаваться при сборке, уже покрыты bin/obj/
 
-# Файлы отладки и профилирования
-*.dotMemoryUnit
-*.pidb
-*.svclog
+## Игнорирование папок зависимостей Node.js (если используются)
+node_modules/
+npm-debug.log
 
-# Директории пакетов NuGet (если используется packages folder)
-packages/
-
-# Файлы, специфичные для Rider / IntelliJ IDEA
-.idea/
-*.sln.iml
-
-# Файлы, специфичные для VS Code
-.vscode/
-
-# Файлы локальных настроек
-launchSettings.json
-Properties/launchSettings.json
-
-# Папка с опубликованным приложением
-publish/
+## Игнорирование файлов, создаваемых средствами CI
+.temp/
+.tmp/
