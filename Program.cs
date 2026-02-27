@@ -1,4 +1,5 @@
 using LibrariesWebApp.Data;
+using  LibrariesWebApp.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Добавление сервисов
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped(typeof(ICrudService<,>),  typeof(CrudService<,>));
 
 var app = builder.Build();
 
