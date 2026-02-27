@@ -1,31 +1,232 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+/* ===== СБРОС ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin-bottom: 60px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 32px;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+/* ===== ШАПКА ===== */
+.header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e9eef2;
+  padding: 16px 0;
+}
+
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  color: #0a1929;
+}
+
+.logo-mark {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.logo-text {
+  font-weight: 500;
+}
+
+.nav {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-item {
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border-radius: 30px;
+  color: #475569;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.nav-item:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.nav-item.active {
+  background-color: #e6edf5;
+  color: #1e4bd2;
+}
+
+/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+.main {
+  flex: 1;
+  padding: 40px 0;
+}
+
+/* ===== КАРТОЧКИ ===== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 30px 0;
+}
+
+.card {
+  background: white;
+  border-radius: 24px;
+  padding: 20px;
+  border: 1px solid #edf2f7;
+  box-shadow: 0 8px 20px -8px rgba(0,20,40,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 28px -12px rgba(0,40,80,0.15);
+}
+
+.card-title {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #0f182a;
+}
+
+.card-subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+}
+
+.card-text {
+  color: #475569;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+.card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #edf2f7;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+/* ===== ТАБЛИЦЫ ===== */
+.table {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  border-collapse: collapse;
+  overflow: hidden;
+  border: 1px solid #eef2f6;
+  margin: 24px 0;
+}
+
+.table th {
+  text-align: left;
+  padding: 16px 20px;
+  background-color: #f9fcff;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #547087;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #edf2f7;
+  color: #1e2f44;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ===== КНОПКИ И ССЫЛКИ ===== */
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: white;
+  border: 1px solid #d0ddee;
+  border-radius: 40px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1e293b;
+  text-decoration: none;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #f1f5f9;
+  border-color: #b3c4d9;
+}
+
+.btn-primary {
+  background: #1e4bd2;
+  border-color: #1e4bd2;
+  color: white;
+  box-shadow: 0 4px 10px rgba(30,75,210,0.2);
+}
+
+.btn-primary:hover {
+  background: #163fa5;
+  border-color: #163fa5;
+}
+
+/* ===== ПОДВАЛ ===== */
+.footer {
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  padding: 24px 0;
+  color: #68788c;
+  font-size: 0.9rem;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer small {
+  font-family: 'IBM Plex Mono', monospace;
 }

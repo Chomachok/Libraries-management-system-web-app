@@ -1,50 +1,45 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - LibrariesWebApp</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <title>@ViewData["Title"] — Библиотеки и книги</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/LibrariesWebApp.styles.css" asp-append-version="true" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">LibrariesWebApp</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+<header class="header">
     <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <a href="@Url.Action("Index", "Home")" class="logo">
+            <span class="logo-mark">📚</span>
+            <span class="logo-text">Книжная полка</span>
+        </a>
+        <nav class="nav">
+            <a href="@Url.Action("Index", "Libraries")" class="nav-item">Библиотеки</a>
+            <a href="@Url.Action("Index", "Books")" class="nav-item">Книги</a>
+            <a href="@Url.Action("Search", "Home")" class="nav-item">Поиск</a>
+            <a href="@Url.Action("About", "Home")" class="nav-item">О проекте</a>
+        </nav>
     </div>
+</header>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - LibrariesWebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<main class="main">
+    <div class="container">
+        @RenderBody()
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <span>© @DateTime.Now.Year — Книжная полка. Каталог библиотек и книг.</span>
+        <small>v 1.0</small>
+    </div>
+</footer>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+@RenderSection("Scripts", required: false)
 </body>
 </html>
