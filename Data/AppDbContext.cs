@@ -10,17 +10,10 @@ namespace LibrariesWebApp.Data;
 public partial class AppDbContext : DbContext
 {
     /// <summary>
-    /// Конструктор по умолчанию, использует <see cref="OnConfiguring"/> для настройки подключения.
-    /// </summary>
-    public AppDbContext()
-    {
-    }
-
-    /// <summary>
-    /// Конструктор с параметрами, передаёт параметры базовому классу.
+    /// Конструктор, принимающий параметры контекста.
     /// Используется при внедрении зависимостей (DI) в ASP.NET Core.
     /// </summary>
-    /// <param name="options">Параметры контекста, обычно содержат строку подключения и провайдера.</param>
+    /// <param name="options">Параметры контекста, содержащие строку подключения и провайдера.</param>
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
@@ -55,15 +48,6 @@ public partial class AppDbContext : DbContext
     /// Тематические рубрики книг (таблица subjects).
     /// </summary>
     public virtual DbSet<Subject> Subjects { get; set; }
-
-    /// <summary>
-    /// Настраивает подключение к базе данных, если оно не было задано через конструктор.
-    /// Здесь задаётся строка подключения к PostgreSQL.
-    /// </summary>
-    /// <param name="optionsBuilder">Построитель параметров контекста.</param>
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=libraries;Username=libraryuser;Password=library");
 
     /// <summary>
     /// Настраивает модель сущностей (схему базы данных, ограничения, связи, комментарии).
