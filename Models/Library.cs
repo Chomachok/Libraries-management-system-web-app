@@ -30,5 +30,8 @@ public partial class Library
     /// </summary>
     public string? Phone { get; set; }
 
+    /// <summary>
+    /// Коллекция книг
+    /// </summary>
     public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 }
