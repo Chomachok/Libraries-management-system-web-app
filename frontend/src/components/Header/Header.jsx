@@ -20,13 +20,13 @@ export default function Header() {
     <header className={styles.header} data-testid="header">
       <Link to="/" className={styles.logo} data-testid="header-logo">
         <span className={styles.logoIcon}>📚</span>
-        <span className={styles.logoText}>Библиотека</span>
+        <span className={styles.logoText}>Книжная полка</span>
       </Link>
 
       <nav className={styles.desktopNav} data-testid="nav">
         {!user && (
           <>
-            <Link to="/libraries" data-testid="nav-libraries">Библиотеки</Link>
+            <Link to="/" datatest-id="nav-home">Главная</Link>
             <Link to="/books" data-testid="nav-books">Каталог</Link>
           </>
         )}
@@ -79,7 +79,7 @@ export default function Header() {
           <nav className={styles.mobileNav}>
             {!user && (
               <>
-                <Link to="/libraries" onClick={closeMenu} data-testid="mobile-nav-libraries">Библиотеки</Link>
+                <Link to="/" onClick={closeMenu} data-testid="mobile-nav-home">Главная</Link>
                 <Link to="/books" onClick={closeMenu} data-testid="mobile-nav-books">Каталог</Link>
                 <Link to="/login" onClick={closeMenu} data-testid="mobile-login-link">Войти</Link>
                 <Link to="/register" onClick={closeMenu} data-testid="mobile-register-link">Регистрация</Link>

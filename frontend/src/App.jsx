@@ -1,6 +1,7 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Header from './components/Header/Header';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
+import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import LibrariesPage from './pages/LibrariesPage/LibrariesPage';
@@ -20,11 +21,11 @@ export default function App() {
       <main style={{ padding: '1rem 2rem' }}>
         <Routes>
           {/* Публичные */}
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/libraries" element={<LibrariesPage />} />
           <Route path="/books" element={<BooksPage />} />
-          <Route path="/" element={<Navigate to="/books" />} />
 
           {/* Читатель */}
           <Route path="/my-books" element={
