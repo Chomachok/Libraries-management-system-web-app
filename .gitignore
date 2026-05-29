@@ -1,0 +1,91 @@
+# ========================================
+# .gitignore для проекта Library Management System
+# ========================================
+
+# -----------------------------
+# Переменные окружения
+# -----------------------------
+.env
+*.env.local
+*.env.*.local
+
+# -----------------------------
+# Бэкенд (.NET)
+# -----------------------------
+# Скомпилированные файлы
+**/bin/
+**/obj/
+*.user
+*.suo
+*.cache
+*.vs/
+*.vscode/
+
+# NuGet
+**/packages/
+# Но файлы packages.config могут быть нужны, поэтому
+!**/packages.config
+
+# Результаты публикации
+**/publish/
+**/PublishProfiles/
+
+# Файлы Rider
+.idea/
+*.sln.DotSettings.user
+
+# -----------------------------
+# Фронтенд (React / Vite)
+# -----------------------------
+node_modules/
+dist/
+build/
+.vite/
+*.local
+
+# Логи фронтенда
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# -----------------------------
+# Docker
+# -----------------------------
+# Тома Docker (если монтируются локально, но обычно не хранятся в репозитории)
+docker-compose.override.yml
+# Данные томов
+volumes/
+postgres_data/
+
+# -----------------------------
+# Общие временные файлы и логи
+# -----------------------------
+*.log
+*.tmp
+*.swp
+*.bak
+*.orig
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# -----------------------------
+# Инструменты тестирования и покрытие
+# -----------------------------
+coverage/
+*.coverlet.*
+TestResults/
+
+# -----------------------------
+# Файлы конфигурации, которые могут содержать секреты (если случайно созданы)
+appsettings.Development.json
+appsettings.Production.json
+# Оставляем только шаблоны
+!**/appsettings.Development.json.example
+!**/appsettings.Production.json.example

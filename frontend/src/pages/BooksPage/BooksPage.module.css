@@ -1,0 +1,30 @@
+.bookCard::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 90px;
+  height: 90px;
+  background: var(--accent-light);
+  border-radius: 50%;
+  transition: transform var(--transition);
+}
+.bookCard:hover::before {
+  transform: scale(1.2);
+}
+.author {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.95rem;
+}
+.library {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: rgba(0,0,0,0.03);
+  padding: 0.25rem 0.8rem;
+  border-radius: 20px;
+  align-self: flex-start;
+}
+.borrowBtn {
+  margin-top: auto;
+}

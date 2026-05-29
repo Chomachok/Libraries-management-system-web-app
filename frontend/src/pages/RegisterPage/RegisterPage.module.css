@@ -1,0 +1,7 @@
+.error {
+  color: var(--accent-hover);
+  font-size: 0.9rem;
+  background: rgba(231,111,81,0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+}
