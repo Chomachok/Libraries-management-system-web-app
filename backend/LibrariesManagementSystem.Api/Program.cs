@@ -4,8 +4,10 @@ using LibrariesManagementSystem.Api.Data;
 using LibrariesManagementSystem.Api.Middleware;
 using LibrariesManagementSystem.Api.Services;
 using LibrariesManagementSystem.Api.Services.Interfaces;
+using LibrariesManagementSystem.Api.Services.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -50,7 +52,8 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(corsOrigins.Split(","))
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -65,6 +68,7 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<ITokenValidator, JwtTokenValidator>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddControllers();
