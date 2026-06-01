@@ -17,7 +17,9 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
 
         RuleFor(user => user.Password)
             .NotEmpty().WithMessage("Пароль обязателен.")
-            .MinimumLength(6).WithMessage("Пароль должен содержать не менее 6 символов.");
+            .MinimumLength(6).WithMessage("Пароль должен содержать не менее 6 символов.")
+            .Matches("[A-Z]").WithMessage("Пароль должен содержать хотя бы одну заглавную букву.")
+            .Matches("[^a-zA-Z0-9]").WithMessage("Пароль должен содержать хотя бы один специальный символ.");
 
         RuleFor(user => user.LibraryId)
             .GreaterThan(0).WithMessage("Выберите библиотеку.");

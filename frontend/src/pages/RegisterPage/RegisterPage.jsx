@@ -42,10 +42,15 @@ export default function RegisterPage() {
     } else if (!/\S+@\S+\.\S+/.test(form.email)) {
       errors.email = 'Кажется, в email не хватает символа @. Проверьте, пожалуйста.';
     }
+    // внутри validate()
     if (!form.password) {
-      errors.password = 'Придумайте пароль.';
+      errors.password = 'Пароль обязателен.';
     } else if (form.password.length < 6) {
-      errors.password = 'Пароль должен содержать хотя бы 6 символов.';
+      errors.password = 'Пароль должен содержать не менее 6 символов.';
+    } else if (!/[A-Z]/.test(form.password)) {
+      errors.password = 'Добавьте хотя бы одну заглавную букву.';
+    } else if (!/[^a-zA-Z0-9]/.test(form.password)) {
+      errors.password = 'Добавьте хотя бы один специальный символ (например @, #, %).';
     }
     if (!confirmPassword) {
       errors.confirmPassword = 'Пожалуйста, повторите пароль.';
