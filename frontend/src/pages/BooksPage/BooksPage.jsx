@@ -57,6 +57,11 @@ export default function BooksPage() {
     }
   };
 
+  const userLibraryName = 
+    user?.role === 'Librarian' && user?.libraryId && Array.isArray(libraries)
+      ? libraries.find(lib => lib.id === parseInt(user.libraryId))?.name
+      : null;
+
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Книжные углы</h1>
@@ -64,7 +69,7 @@ export default function BooksPage() {
         {user?.role === 'Librarian' ? (
           <input
             type="text"
-            value={'Ваш уголок'}
+            value={userLibraryName ? `Ваш уголок: ${userLibraryName}` : `Ваш уголок (ID: ${user.libraryId})`}
             disabled
             style={{ flex: 1, minWidth: '200px' }}
           />
