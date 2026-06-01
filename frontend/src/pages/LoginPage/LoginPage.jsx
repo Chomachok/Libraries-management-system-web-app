@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { interfaceTexts } from '../../locale/interfaceTexts';
+import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -50,7 +51,7 @@ export default function LoginPage() {
         />
         <button type="submit" style={{ padding: '0.8rem', fontSize: '1rem', fontWeight: 600 }}>Войти</button>
         <p style={{ textAlign: 'center', fontFamily: 'var(--font-ui)' }}>
-          Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
+          Нет аккаунта? <Link to="/register" className={styles.link}>Зарегистрироваться</Link>
         </p>
       </form>
     </div>

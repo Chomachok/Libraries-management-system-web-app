@@ -29,6 +29,12 @@
   text-align: center;
 }
 
+a.link,
+a.link:active {
+  text-decoration: underline;
+  color: inherit;
+}
+
 @media (max-width: 480px) {
   .form {
     padding: 2rem 1.5rem;

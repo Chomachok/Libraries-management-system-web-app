@@ -29,6 +29,12 @@
   text-align: center;
 }
 
+a.link,
+a.link:active {
+  text-decoration: underline;
+  color: inherit;
+}
+
 /* Адаптация для маленьких экранов */
 @media (max-width: 480px) {
   .form {

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../api/api';
 import { interfaceTexts } from '../../locale/interfaceTexts';
+import styles from './RegisterPage.module.css';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -51,7 +52,7 @@ export default function RegisterPage() {
         </select>
         <button type="submit" data-testid="registerBtn">Зарегистрироваться</button>
         <p style={{ textAlign: 'center' }}>
-          Уже есть аккаунт? <Link to="/login">Войти</Link>
+          Уже есть аккаунт? <Link to="/login" className={styles.link}>Войти</Link>
         </p>
       </form>
     </div>
