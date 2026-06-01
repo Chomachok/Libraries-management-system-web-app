@@ -1,7 +1,36 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 1rem;
+}
+
+.form {
+  background: var(--color-card-bg);
+  border-radius: 6px;
+  padding: 3rem;
+  box-shadow: var(--shadow-soft);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form h2 {
+  font-family: var(--font-heading);
+  text-align: center;
+}
+
 .error {
-  color: var(--accent-hover);
+  color: var(--color-accent-hover);
   font-size: 0.9rem;
-  background: rgba(231,111,81,0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .form {
+    padding: 2rem 1.5rem;
+  }
 }

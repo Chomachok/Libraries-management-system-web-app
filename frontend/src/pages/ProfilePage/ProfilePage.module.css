@@ -292,3 +292,21 @@
   content: '⚠️';
   font-size: 0.9rem;
 }
+
+@media (max-width: 600px) {
+  .container {
+    padding: 1rem;
+  }
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .leftColumn {
+    align-items: center;
+    text-align: center;
+  }
+  .editBtn,
+  .info button {
+    align-self: center;
+  }
+}

@@ -9,11 +9,11 @@ export default function LibrariesPage() {
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Наши уголки</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
+      <div>
         {libraries.map(lib => (
-          <div key={lib.id} className="card" style={{ padding: '2rem' }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)' }}>{lib.name}</h3>
-            <p style={{ color: 'var(--color-accent-secondary)' }}>{lib.address}</p>
+          <div key={lib.id} className="card">
+            <h3>{lib.name}</h3>
+            <p>{lib.address}</p>
           </div>
         ))}
       </div>

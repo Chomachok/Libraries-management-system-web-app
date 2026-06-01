@@ -49,7 +49,7 @@ export default function RegisterPage() {
           <option value="">Выберите библиотеку</option>
           {libraries.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
         </select>
-        <button type="submit" style={{ padding: '0.8rem', fontSize: '1rem', fontWeight: 600 }}>Зарегистрироваться</button>
+        <button type="submit" data-testid="registerBtn">Зарегистрироваться</button>
         <p style={{ textAlign: 'center' }}>
           Уже есть аккаунт? <Link to="/login">Войти</Link>
         </p>

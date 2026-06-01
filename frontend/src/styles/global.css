@@ -172,3 +172,74 @@ input:focus, select:focus, textarea:focus {
 .page-enter {
   animation: pageFadeIn 0.4s ease-out;
 }
+
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+  h1::after {
+    width: 50px;
+    height: 3px;
+  }
+  main {
+    padding: 0.5rem 1rem !important;
+  }
+  body::before,
+  body::after {
+    display: none;
+  }
+  .filters {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.2rem;
+  }
+  .card {
+    padding: 1.2rem;
+  }
+  .form-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+  .stat-card {
+    padding: 1.2rem;
+  }
+  .btn-accent {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+  .card {
+    padding: 1rem;
+  }
+  .page-btn {
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+/* Центрированный контейнер */
+.page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Адаптация */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 1rem;
+  }
+}
