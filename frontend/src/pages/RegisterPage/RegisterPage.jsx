@@ -31,6 +31,7 @@ export default function RegisterPage() {
     setFieldErrors(prev => ({ ...prev, [field]: '' }));
   };
 
+  // Локальная валидация
   const validate = () => {
     const errors = {};
     if (!form.fullName.trim()) {
@@ -52,16 +53,18 @@ export default function RegisterPage() {
       errors.confirmPassword = 'Пароли не совпадают. Попробуйте ещё раз.';
     }
     if (!form.libraryId) {
-      errors.libraryId = 'Выберите, в какой уголок вы хотите записаться.';
+      errors.libraryId = 'Выберите, в какую библиотеку вы хотите записаться.';
     }
     return errors;
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const errors = validate();
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
+
+    // Локальная проверка
+    const localErrors = validate();
+    if (Object.keys(localErrors).length > 0) {
+      setFieldErrors(localErrors);
       return;
     }
 
@@ -69,7 +72,23 @@ export default function RegisterPage() {
       await register({ ...form, libraryId: parseInt(form.libraryId) });
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Ошибка регистрации');
+      // Обработка ошибок от сервера (включая FluentValidation)
+      const data = err.response?.data;
+      if (data) {
+        if (typeof data === 'string') {
+          setError(data);
+        } else if (data.error) {
+          setError(data.error);
+        } else if (data.errors) {
+          // FluentValidation возвращает словарь { field: [messages] }
+          const messages = Object.values(data.errors).flat();
+          setError(messages.join('. '));
+        } else {
+          setError('Произошла ошибка при регистрации.');
+        }
+      } else {
+        setError('Не удалось связаться с сервером.');
+      }
     }
   };
 
@@ -77,6 +96,7 @@ export default function RegisterPage() {
     <div className={styles.container} data-testid="register-page">
       <form className={styles.form} onSubmit={handleSubmit} data-testid="register-form">
         <h2 data-testid="register-title">Регистрация читателя</h2>
+
         {error && <p className={styles.error} data-testid="register-error">{error}</p>}
 
         <input
@@ -137,6 +157,7 @@ export default function RegisterPage() {
         <button type="submit" data-testid="register-submit-button">
           Зарегистрироваться
         </button>
+
         <p>
           Уже есть аккаунт?{' '}
           <Link to="/login" className={styles.link}>Войти</Link>
