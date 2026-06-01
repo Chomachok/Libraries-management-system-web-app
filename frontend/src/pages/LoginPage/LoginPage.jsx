@@ -9,49 +9,96 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  // Сброс ошибок поля при вводе
+  const handleChange = (field, value) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+    setFieldErrors(prev => ({ ...prev, [field]: '' }));
+  };
+
+  // Локальная валидация
+  const validate = () => {
+    const errors = {};
+    if (!form.email.trim()) {
+      errors.email = 'Email обязателен.';
+    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+      errors.email = 'Некорректный формат email.';
+    }
+    if (!form.password) {
+      errors.password = 'Пароль обязателен.';
+    } else if (form.password.length < 6) {
+      errors.password = 'Пароль должен содержать не менее 6 символов.';
+    }
+    return errors;
+  };
 
   const handleSubmit = async e => {
     e.preventDefault();
+
+    const localErrors = validate();
+    if (Object.keys(localErrors).length > 0) {
+      setFieldErrors(localErrors);
+      return;
+    }
+
     try {
       await login(form.email, form.password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Неверные учётные данные');
+      const data = err.response?.data;
+      if (data) {
+        if (typeof data === 'string') {
+          setError(data);
+        } else if (data.error) {
+          setError(data.error);
+        } else if (data.errors) {
+          // FluentValidation возвращает { field: [messages] }
+          const messages = Object.values(data.errors).flat();
+          setError(messages.join('. '));
+        } else {
+          setError('Неверные учётные данные.');
+        }
+      } else {
+        setError('Не удалось связаться с сервером.');
+      }
     }
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', padding: '1rem' }}>
-      <form onSubmit={handleSubmit} style={{
-        background: 'var(--color-card-bg)',
-        borderRadius: '6px',
-        padding: '3rem',
-        boxShadow: 'var(--shadow-soft)',
-        width: '100%',
-        maxWidth: '420px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.2rem'
-      }}>
-        <h2 style={{ fontFamily: 'var(--font-heading)', textAlign: 'center' }}>{interfaceTexts.auth.title}</h2>
-        {error && <p style={{ color: 'var(--color-accent-hover)', fontSize: '0.9rem' }}>{error}</p>}
+    <div className={styles.container}>
+      <form className={styles.form} onSubmit={handleSubmit} data-testid="login-form">
+        <h2>{interfaceTexts.auth.title}</h2>
+
+        {error && <p className={styles.error} data-testid="login-error">{error}</p>}
+
         <input
           type="email"
           placeholder={interfaceTexts.auth.placeholderLogin}
           value={form.email}
-          onChange={e => setForm({...form, email: e.target.value})}
-          required
+          onChange={e => handleChange('email', e.target.value)}
+          className={fieldErrors.email ? styles.inputError : ''}
+          data-testid="login-email-input"
         />
+        {fieldErrors.email && <span className={styles.fieldError}>{fieldErrors.email}</span>}
+
         <input
           type="password"
           placeholder="Пароль"
           value={form.password}
-          onChange={e => setForm({...form, password: e.target.value})}
-          required
+          onChange={e => handleChange('password', e.target.value)}
+          className={fieldErrors.password ? styles.inputError : ''}
+          data-testid="login-password-input"
         />
-        <button type="submit" style={{ padding: '0.8rem', fontSize: '1rem', fontWeight: 600 }}>Войти</button>
-        <p style={{ textAlign: 'center', fontFamily: 'var(--font-ui)' }}>
-          Нет аккаунта? <Link to="/register" className={styles.link}>Зарегистрироваться</Link>
+        {fieldErrors.password && <span className={styles.fieldError}>{fieldErrors.password}</span>}
+
+        <button type="submit" data-testid="login-submit-button">
+          Войти
+        </button>
+
+        <p>
+          Нет аккаунта?{' '}
+          <Link to="/register" className={styles.link}>Зарегистрироваться</Link>
         </p>
       </form>
     </div>

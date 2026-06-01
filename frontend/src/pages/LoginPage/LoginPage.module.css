@@ -27,6 +27,29 @@
   color: var(--color-accent-hover);
   font-size: 0.9rem;
   text-align: center;
+  background: rgba(231, 111, 81, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.fieldError {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--color-accent-hover);
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.fieldError::before {
+  content: '⚠️';
+  font-size: 0.9rem;
+}
+
+.inputError {
+  border-color: var(--color-accent-hover) !important;
 }
 
 a.link,
@@ -38,5 +61,19 @@ a.link:active {
 @media (max-width: 480px) {
   .form {
     padding: 2rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .form button[type="submit"] {
+    font-size: 0.8rem;
+    padding: 0.6rem 0.8rem;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+    min-width: 100%;
+    justify-content: center;
+  }
+
+  .form h2 {
+    font-size: 1.5rem;
   }
 }

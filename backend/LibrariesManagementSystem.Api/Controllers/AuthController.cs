@@ -19,9 +19,6 @@ public class AuthController(IAuthService authService, IWebHostEnvironment env) :
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginDto dto)
     {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
         var (authResponse, refreshToken) = await authService.Login(dto);
         SetRefreshTokenCookie(refreshToken);
         return Ok(authResponse);
