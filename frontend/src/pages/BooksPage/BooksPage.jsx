@@ -5,6 +5,7 @@ import api from '../../api/api';
 import { useApi } from '../../hooks/useApi';
 import BookCover from '../../components/BookCover/BookCover';
 import styles from './BooksPage.module.css';
+import { useNotification } from '../../contexts/NotificationContext';
 
 export default function BooksPage() {
   const { user } = useAuth();
@@ -40,10 +41,10 @@ export default function BooksPage() {
   const borrowBook = async (bookId) => {
     try {
       await api.post(`/checkouts/borrow/${bookId}`);
-      alert('Книга отложена в ваш уголок!');
+      showToast('Книга отложена в ваш уголок!', 'success');
       fetchBooks(filters);
     } catch (err) {
-      alert(err.response?.data?.error || 'Ошибка');
+      showToast(err.response?.data?.error || 'Не удалось взять книгу', 'error');
     }
   };
 

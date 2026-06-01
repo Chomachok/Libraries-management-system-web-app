@@ -3,6 +3,7 @@ import { useApi } from '../../hooks/useApi';
 import api from '../../api/api';
 import styles from './ProfilePage.module.css';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNotification } from '../../contexts/NotificationContext';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -56,24 +57,13 @@ export default function ProfilePage() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    const errors = validate();
-    if (Object.keys(errors).length > 0) {
-      setFieldErrors(errors);
-      return;
-    }
-
     try {
       await api.put('/readers/profile', form);
-      setNotification({
-        type: 'success',
-        message: 'Профиль бережно обновлён. Все изменения сохранены в вашем уголке.',
-      });
+      showToast('Профиль бережно обновлён.', 'success');
       setEditMode(false);
       refetch();
     } catch (err) {
-      const serverMsg =
-        err.response?.data?.error || 'Произошла ошибка. Попробуйте ещё раз.';
-      setNotification({ type: 'error', message: serverMsg });
+      showToast(err.response?.data?.error || 'Ошибка обновления', 'error');
     }
   };
 
