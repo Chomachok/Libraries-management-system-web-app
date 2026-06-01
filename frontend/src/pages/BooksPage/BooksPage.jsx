@@ -64,7 +64,7 @@ export default function BooksPage() {
         {user?.role === 'Librarian' ? (
           <input
             type="text"
-            value={`Ваш уголок (ID: ${user.libraryId})`}
+            value={'Ваш уголок'}
             disabled
             style={{ flex: 1, minWidth: '200px' }}
           />
