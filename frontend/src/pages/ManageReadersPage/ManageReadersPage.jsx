@@ -25,10 +25,7 @@ export default function ManageReadersPage() {
 
   const handleDelete = async (id) => {
     if (window.confirm('Удалить читателя?')) {
-      try {
-        await api.delete(`/readers/${id}`);
-        refetch();
-      } catch (err) { alert(err.response?.data?.error || 'Ошибка'); }
+      try { await api.delete(`/readers/${id}`); refetch(); } catch (err) { alert(err.response?.data?.error || 'Ошибка'); }
     }
   };
 
@@ -60,22 +57,22 @@ export default function ManageReadersPage() {
   };
 
   return (
-    <div>
+    <div style={{ padding: '2rem' }}>
       <h1>Управление читателями</h1>
-      <div className="filters">
-        <input placeholder="Поиск..." value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} />
-        <button className="btn-accent" onClick={openCreateModal}>+ Добавить читателя</button>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>
+        <input placeholder="Поиск..." value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} style={{ flex: 1 }} />
+        <button onClick={openCreateModal}>+ Добавить читателя</button>
       </div>
       {loading && <p>Загрузка...</p>}
-      {error && <p style={{ color: 'var(--accent-hover)' }}>Ошибка: {error}</p>}
-      <div className="grid">
+      {error && <p style={{ color: 'var(--color-accent-hover)' }}>Ошибка</p>}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
         {paginatedReaders.map(reader => (
-          <div key={reader.id} className="card">
-            <h3>{reader.fullName}</h3>
+          <div key={reader.id} className="card" style={{ padding: '1.5rem' }}>
+            <h3 style={{ fontFamily: 'var(--font-heading)' }}>{reader.fullName}</h3>
             <p>{reader.email}</p>
             <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto' }}>
-              <button className="btn-accent" onClick={() => openEditModal(reader)}>✏️</button>
-              <button className="btn-accent" onClick={() => handleDelete(reader.id)}>🗑️</button>
+              <button onClick={() => openEditModal(reader)} style={{ background: 'var(--color-accent-secondary)', color: 'var(--color-text-main)' }}>✏️</button>
+              <button onClick={() => handleDelete(reader.id)}>🗑️</button>
             </div>
           </div>
         ))}
@@ -83,12 +80,12 @@ export default function ManageReadersPage() {
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       {modalOpen && (
         <Modal title={editingReader ? 'Редактировать читателя' : 'Добавить читателя'} onClose={() => setModalOpen(false)}>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} onSubmit={handleSave}>
+          <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <input value={form.fullName} onChange={e => setForm({...form, fullName: e.target.value})} placeholder="ФИО" required />
             <input value={form.email} onChange={e => setForm({...form, email: e.target.value})} type="email" placeholder="Email" required />
             <input value={form.password} onChange={e => setForm({...form, password: e.target.value})} type="password"
               placeholder={editingReader ? 'Новый пароль (если нужно)' : 'Пароль'} required={!editingReader} />
-            <button className="btn-accent" type="submit">Сохранить</button>
+            <button type="submit">Сохранить</button>
           </form>
         </Modal>
       )}

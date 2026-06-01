@@ -3,28 +3,28 @@ import { useApi } from '../../hooks/useApi';
 export default function DashboardPage() {
   const [stats, loading, error] = useApi('/dashboard/stats');
 
-  if (loading) return <p>Загрузка...</p>;
-  if (error) return <p style={{ color: 'var(--accent-hover)' }}>Ошибка: {error}</p>;
-  if (!stats) return <p>Нет данных</p>;
+  if (loading) return <p style={{ padding: '2rem' }}>Загрузка статистики...</p>;
+  if (error) return <p style={{ padding: '2rem', color: 'var(--color-accent-hover)' }}>Ошибка</p>;
+  if (!stats) return <p style={{ padding: '2rem' }}>Нет данных</p>;
 
   return (
-    <div>
-      <h1>Статистика библиотеки</h1>
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))' }}>
-        <div className="stat-card">
-          <h3>{stats.booksCount}</h3>
-          <p>Книг</p>
+    <div style={{ padding: '2rem' }}>
+      <h1>Рабочий угол</h1>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1.5rem' }}>
+        <div className="card" style={{ textAlign: 'center', padding: '2rem' }}>
+          <h2 style={{ color: 'var(--color-accent-primary)' }}>{stats.booksCount}</h2>
+          <p>Книг в фонде</p>
         </div>
-        <div className="stat-card">
-          <h3>{stats.readersCount}</h3>
+        <div className="card" style={{ textAlign: 'center', padding: '2rem' }}>
+          <h2 style={{ color: 'var(--color-accent-primary)' }}>{stats.readersCount}</h2>
           <p>Читателей</p>
         </div>
-        <div className="stat-card">
-          <h3>{stats.activeCheckouts}</h3>
+        <div className="card" style={{ textAlign: 'center', padding: '2rem' }}>
+          <h2 style={{ color: 'var(--color-accent-primary)' }}>{stats.activeCheckouts}</h2>
           <p>Активных выдач</p>
         </div>
-        <div className="stat-card">
-          <h3>{stats.overdueCheckouts}</h3>
+        <div className="card" style={{ textAlign: 'center', padding: '2rem' }}>
+          <h2 style={{ color: 'var(--color-status-warning)' }}>{stats.overdueCheckouts}</h2>
           <p>Просроченных</p>
         </div>
       </div>

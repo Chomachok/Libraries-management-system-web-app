@@ -1,5 +1,219 @@
-.info {
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--color-text-main);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.heading::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: var(--color-accent-primary);
+  margin-top: 0.5rem;
+  border-radius: 2px;
+}
+
+/* Режим редактирования */
+.editForm {
+  background: var(--color-card-bg);
+  border-radius: 6px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  max-width: 500px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+
+.label {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--color-text-main);
+  opacity: 0.7;
+}
+
+.editActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.saveBtn {
+  background: var(--color-accent-primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s;
+}
+
+.saveBtn:hover {
+  background: var(--color-accent-hover);
+}
+
+.cancelBtn {
+  background: var(--color-accent-secondary);
+  color: var(--color-text-main);
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s;
+}
+
+/* Основной макет (просмотр) */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 600px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--color-accent-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--color-text-main);
+  box-shadow: var(--shadow-soft);
+}
+
+.fullName {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.roleBadge {
+  background: var(--color-accent-primary);
+  color: white;
+  padding: 0.2rem 1rem;
+  border-radius: 20px;
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.email {
+  font-family: var(--font-body);
+  color: var(--color-text-main);
+}
+
+.email .label {
+  font-weight: 600;
+  color: var(--color-text-main);
+  opacity: 0.7;
+}
+
+.editBtn {
+  background: var(--color-accent-primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 1rem;
+  transition: background 0.3s;
+}
+
+.editBtn:hover {
+  background: var(--color-accent-hover);
+}
+
+/* Правая колонка — библиотека */
+.rightColumn {
+  display: flex;
+  align-items: flex-start;
+}
+
+.libraryCard {
+  background: var(--color-card-bg);
+  border-radius: 6px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  width: 100%;
+  position: relative;
+}
+
+.libraryTitle {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.libraryName {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--color-accent-primary);
+  margin-bottom: 0.3rem;
+}
+
+.libraryAddress {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--color-text-main);
+  opacity: 0.8;
+}
+
+.libraryEmpty {
+  font-family: var(--font-body);
+  font-style: italic;
+  color: var(--color-text-main);
+  opacity: 0.7;
+}
+
+.decorativeLine {
+  margin-top: 1.5rem;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    var(--color-border),
+    transparent
+  );
 }
