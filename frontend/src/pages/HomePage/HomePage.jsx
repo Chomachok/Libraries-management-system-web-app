@@ -1,34 +1,25 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { useApi } from '../../hooks/useApi';
 import api from '../../api/api';
+import BookCover from '../../components/BookCover/BookCover';
 import styles from './HomePage.module.css';
 import { interfaceTexts } from '../../locale/interfaceTexts';
-import { useAuth } from '../../contexts/AuthContext';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
   const { user } = useAuth();
-
-  // Загружаем все книги, чтобы выбрать случайную доступную
+  const [search, setSearch] = useState('');
   const [books, loadingBooks] = useApi('/books');
-
-  // Состояние для "Книги вечера"
   const [featuredBook, setFeaturedBook] = useState(null);
 
   useEffect(() => {
     if (Array.isArray(books) && books.length > 0) {
-      // Отфильтровываем только доступные книги
       const availableBooks = books.filter(b => b.availableCopies > 0);
-      if (availableBooks.length > 0) {
-        const randomIndex = Math.floor(Math.random() * availableBooks.length);
-        setFeaturedBook(availableBooks[randomIndex]);
-      } else {
-        // Если доступных нет, берём любую
-        const randomIndex = Math.floor(Math.random() * books.length);
-        setFeaturedBook(books[randomIndex]);
-      }
+      const pool = availableBooks.length > 0 ? availableBooks : books;
+      const randomIndex = Math.floor(Math.random() * pool.length);
+      setFeaturedBook(pool[randomIndex]);
     }
   }, [books]);
 
@@ -41,7 +32,6 @@ export default function HomePage() {
     }
   };
 
-  // Функция "Отложить в мой уголок" (требует авторизации)
   const handleBorrow = async (bookId) => {
     try {
       await api.post(`/checkouts/borrow/${bookId}`);
@@ -78,12 +68,7 @@ export default function HomePage() {
         {featuredBook && (
           <div className={styles.featuredContent}>
             <div className={styles.coverWrapper}>
-              {/* Обложка-заглушка, если нет реальной */}
-              <img
-                src={featuredBook.cover || '/assets/book-cover-placeholder.jpg'}
-                alt={featuredBook.title}
-                className={styles.cover}
-              />
+              <BookCover coverUrl={featuredBook.coverImageUrl} title={featuredBook.title} />
             </div>
             <div className={styles.info}>
               <h3>{featuredBook.title}</h3>
@@ -92,14 +77,14 @@ export default function HomePage() {
                 {featuredBook.description || 'Увлекательная история, которая скрасит ваш вечер.'}
               </p>
               {featuredBook.availableCopies > 0 && user?.role === 'Reader' ? (
-          <button className="btn-accent" onClick={() => handleBorrow(featuredBook.id)}>
-            Отложить в мой уголок
-          </button>
-        ) : featuredBook.availableCopies === 0 ? (
-          <span className="badge-warning">
-            Сейчас в гостях у другого читателя. Вернётся домой примерно {new Date(Date.now() + 14 * 86400000).toLocaleDateString()}
-          </span>
-        ) : null}
+                <button className="btn-accent" onClick={() => handleBorrow(featuredBook.id)}>
+                  Отложить в мой уголок
+                </button>
+              ) : featuredBook.availableCopies === 0 ? (
+                <span className="badge-warning">
+                  Сейчас в гостях у другого читателя. Вернётся домой примерно {new Date(Date.now() + 14 * 86400000).toLocaleDateString()}
+                </span>
+              ) : null}
             </div>
           </div>
         )}

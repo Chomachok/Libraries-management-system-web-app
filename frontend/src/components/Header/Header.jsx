@@ -28,7 +28,7 @@ export default function Header() {
 
       {/* Десктопная навигация */}
       <nav className={styles.desktopNav}>
-        <Link to="/books">Книжный стеллаж</Link>
+        <Link to="/manage-books">Книжный стеллаж</Link>
         {user?.role !== 'Librarian' && <Link to="/libraries">Наши уголки</Link>}
         {user?.role === 'Reader' && <Link to="/my-books">Мой уголок</Link>}
       </nav>

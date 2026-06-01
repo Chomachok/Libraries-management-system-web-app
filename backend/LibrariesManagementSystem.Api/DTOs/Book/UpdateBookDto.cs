@@ -16,4 +16,5 @@ public class UpdateBookDto
 
     [Required, Range(1, int.MaxValue)]
     public int TotalCopies { get; set; }
+    public string? CoverImageUrl { get; set; }
 }

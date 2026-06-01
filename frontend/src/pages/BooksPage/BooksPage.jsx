@@ -3,24 +3,26 @@ import { useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../api/api';
 import { useApi } from '../../hooks/useApi';
+import BookCover from '../../components/BookCover/BookCover';
+import styles from './BooksPage.module.css';
 
 export default function BooksPage() {
   const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
-
-  // Извлекаем параметры из URL при первом рендере
   const initialSearch = searchParams.get('search') || '';
   const initialLibraryId = searchParams.get('libraryId') || '';
 
-  const [filters, setFilters] = useState({
-    libraryId: initialLibraryId,
-    search: initialSearch,
-  });
-
+  const [filters, setFilters] = useState({ libraryId: initialLibraryId, search: initialSearch });
   const [libraries] = useApi('/libraries');
   const [books, bookLoading, bookError, fetchBooks] = useApi('/books', { immediate: false });
 
-  // Загрузка книг при изменении фильтров
+  // Если библиотекарь — сразу показываем только его библиотеку
+  useEffect(() => {
+    if (user?.role === 'Librarian' && user.libraryId) {
+      setFilters(prev => ({ ...prev, libraryId: user.libraryId.toString() }));
+    }
+  }, [user]);
+
   useEffect(() => {
     const params = {};
     if (filters.libraryId) params.libraryId = filters.libraryId;
@@ -28,14 +30,6 @@ export default function BooksPage() {
     fetchBooks(params);
   }, [filters, fetchBooks]);
 
-  // Загрузка книг только той библиотеки, к которой относится библиотекарь
-  useEffect(() => {
-    if (user?.role === 'Librarian' && user.libraryId) {
-      setFilters(prev => ({ ...prev, libraryId: user.libraryId.toString() }));
-    }
-  }, [user]);
-
-  // Синхронизируем фильтры с URL
   useEffect(() => {
     const params = {};
     if (filters.search) params.search = filters.search;
@@ -47,31 +41,27 @@ export default function BooksPage() {
     try {
       await api.post(`/checkouts/borrow/${bookId}`);
       alert('Книга отложена в ваш уголок!');
-      // обновить список
-      const params = {};
-      if (filters.libraryId) params.libraryId = filters.libraryId;
-      if (filters.search) params.search = filters.search;
-      fetchBooks(params);
+      fetchBooks(filters);
     } catch (err) {
       alert(err.response?.data?.error || 'Ошибка');
     }
   };
 
-  const userLibraryName = 
+  // Вычисляем название библиотеки библиотекаря
+  const userLibraryName =
     user?.role === 'Librarian' && user?.libraryId && Array.isArray(libraries)
-      ? libraries.find(lib => lib.id === parseInt(user.libraryId))?.name
+      ? libraries.find(l => l.id === parseInt(user.libraryId))?.name
       : null;
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className={styles.page}>
       <h1>Книжные углы</h1>
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+      <div className={styles.filters}>
         {user?.role === 'Librarian' ? (
           <input
             type="text"
-            value={userLibraryName ? `Ваш уголок: ${userLibraryName}` : `Ваш уголок (ID: ${user.libraryId})`}
+            value={userLibraryName ? `Ваш уголок: ${userLibraryName}` : `Ваш уголок`}
             disabled
-            style={{ flex: 1, minWidth: '200px' }}
           />
         ) : (
           <select
@@ -79,53 +69,43 @@ export default function BooksPage() {
             onChange={e => setFilters({ ...filters, libraryId: e.target.value })}
           >
             <option value="">Все уголки</option>
-            {Array.isArray(libraries) && libraries.map(l => (
-              <option key={l.id} value={l.id}>{l.name}</option>
-            ))}
+            {Array.isArray(libraries) &&
+              libraries.map(l => (
+                <option key={l.id} value={l.id}>
+                  {l.name}
+                </option>
+              ))}
           </select>
         )}
         <input
           type="text"
-          placeholder="Название или автор..."
+          placeholder="Название, автор или ваше настроение..."
           value={filters.search}
           onChange={e => setFilters({ ...filters, search: e.target.value })}
-          style={{ flex: 1, minWidth: '200px' }}
         />
       </div>
-
       {bookLoading && <p>Ищем книги на полках...</p>}
-      {bookError && <p style={{ color: 'var(--color-accent-hover)' }}>Ошибка загрузки каталога</p>}
-
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '1.5rem',
-      }}>
-        {Array.isArray(books) && books.map(book => (
-          <div key={book.id} className="card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <Link to={`/books/${book.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <h3 style={{ fontFamily: 'var(--font-heading)' }}>{book.title}</h3>
-            </Link>
-            <p style={{ fontStyle: 'italic', color: 'var(--color-accent-primary)' }}>{book.author}</p>
-            <p style={{ fontSize: '0.9rem' }}>
-              В наличии: {book.availableCopies} / {book.totalCopies}
-            </p>
-            <p style={{ fontSize: '0.8rem', color: 'var(--color-accent-secondary)' }}>{book.libraryName}</p>
-            {user?.role === 'Reader' && book.availableCopies > 0 && (
-              <button
-                onClick={() => borrowBook(book.id)}
-                style={{ marginTop: 'auto', alignSelf: 'flex-start' }}
-              >
-                Отложить в мой уголок
-              </button>
-            )}
-            {book.availableCopies === 0 && (
-              <span className="badge-warning" style={{ marginTop: 'auto', alignSelf: 'flex-start' }}>
-                Занята
-              </span>
-            )}
-          </div>
-        ))}
+      {bookError && <p className={styles.error}>Ошибка загрузки каталога</p>}
+      <div className={styles.grid}>
+        {Array.isArray(books) &&
+          books.map(book => (
+            <div key={book.id} className={`${styles.card} card`}>
+              <Link to={`/books/${book.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <BookCover coverUrl={book.coverImageUrl} title={book.title} />
+                <h3 className={styles.title}>{book.title}</h3>
+              </Link>
+              <p className={styles.author}>{book.author}</p>
+              <p className={styles.available}>
+                В наличии: {book.availableCopies} / {book.totalCopies}
+              </p>
+              <p className={styles.library}>{book.libraryName}</p>
+              {user?.role === 'Reader' && book.availableCopies > 0 && (
+                <button onClick={() => borrowBook(book.id)} className="btn-accent">
+                  Отложить в мой уголок
+                </button>
+              )}
+            </div>
+          ))}
       </div>
     </div>
   );

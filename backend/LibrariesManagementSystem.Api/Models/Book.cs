@@ -12,6 +12,7 @@ public class Book
     public int AvailableCopies { get; set; }
     public int LibraryId { get; set; }
     public Library Library { get; set; } = null!;
+    public string? CoverImageUrl { get; set; }
 
     public ICollection<Checkout> Checkouts { get; set; } = new List<Checkout>();
 }

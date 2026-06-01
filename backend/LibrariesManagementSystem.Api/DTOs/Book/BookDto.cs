@@ -12,4 +12,5 @@ public class BookDto
     public int AvailableCopies { get; set; }
     public int LibraryId { get; set; }
     public string LibraryName { get; set; } = string.Empty;
+    public string? CoverImageUrl { get; set; }
 }

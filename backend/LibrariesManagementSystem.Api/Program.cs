@@ -13,7 +13,24 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-Env.Load();
+// Создание пути, где находится env
+var envFilePath = Path.Combine(Directory.GetCurrentDirectory(), "../../.env");
+if (File.Exists(envFilePath))
+{
+    foreach (var line in File.ReadAllLines(envFilePath))
+    {
+        var trimmed = line.Trim();
+        if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith("#"))
+            continue;
+        var index = trimmed.IndexOf('=');
+        if (index > 0)
+        {
+            var key = trimmed[..index].Trim();
+            var value = trimmed[(index + 1)..].Trim();
+            Environment.SetEnvironmentVariable(key, value);
+        }
+    }
+}
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -124,6 +141,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseStaticFiles();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();

@@ -16,4 +16,6 @@ public class CreateBookDto
 
     [Required, Range(1, int.MaxValue, ErrorMessage = "Количество копий должно быть >= 1")]
     public int TotalCopies { get; set; }
+    public string? CoverImageUrl { get; set; }
+    
 }
