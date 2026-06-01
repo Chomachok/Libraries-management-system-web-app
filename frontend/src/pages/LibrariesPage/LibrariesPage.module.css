@@ -1,1 +1,47 @@
-/* nothing */
+.page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-family: var(--font-heading);
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--color-card-bg);
+  border-radius: 6px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(227, 213, 197, 0.6);
+}
+
+.card h3 {
+  font-family: var(--font-heading);
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--color-accent-secondary);
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 1rem;
+  }
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

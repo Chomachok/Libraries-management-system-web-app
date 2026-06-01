@@ -1,1 +1,43 @@
-/* nothing */
+.page {
+  padding: 2rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--color-card-bg);
+  border-radius: 6px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.card h2 {
+  color: var(--color-accent-primary);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  font-family: var(--font-ui);
+  color: var(--color-text-main);
+  opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 1rem;
+  }
+  .cards {
+    grid-template-columns: 1fr 1fr;
+  }
+}

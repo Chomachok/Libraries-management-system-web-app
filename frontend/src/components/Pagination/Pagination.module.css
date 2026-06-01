@@ -25,3 +25,9 @@
   color: white;
   border-color: var(--accent);
 }
+
+@media (max-width: 480px) {
+  .pageBtn {
+    padding: 0.4rem 0.8rem;
+  }
+}

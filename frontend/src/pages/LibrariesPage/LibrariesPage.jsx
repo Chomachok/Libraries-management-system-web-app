@@ -1,21 +1,19 @@
 import { useApi } from '../../hooks/useApi';
-// Можно не импортировать стили, но чтобы не было ошибок, оставим пустой импорт
-import './LibrariesPage.module.css'; // файл содержит только /* пусто */
 
 export default function LibrariesPage() {
   const [libraries, loading, error] = useApi('/libraries');
 
-  if (loading) return <p data-testid="loading">Загрузка...</p>;
-  if (error) return <p data-testid="error" style={{ color: 'var(--accent-hover)' }}>Ошибка: {error}</p>;
+  if (loading) return <p style={{ padding: '2rem' }}>Загрузка...</p>;
+  if (error) return <p style={{ padding: '2rem', color: 'var(--color-accent-hover)' }}>Ошибка загрузки</p>;
 
   return (
-    <div data-testid="libraries-page">
-      <h1 data-testid="libraries-title">Библиотеки</h1>
-      <div className="grid" data-testid="libraries-grid">
-        {libraries.map(l => (
-          <div key={l.id} className="card" data-testid={`library-card-${l.id}`}>
-            <h3 data-testid={`library-name-${l.id}`}>{l.name}</h3>
-            <p data-testid={`library-address-${l.id}`}>{l.address}</p>
+    <div style={{ padding: '2rem' }}>
+      <h1>Наши уголки</h1>
+      <div>
+        {libraries.map(lib => (
+          <div key={lib.id} className="card">
+            <h3>{lib.name}</h3>
+            <p>{lib.address}</p>
           </div>
         ))}
       </div>

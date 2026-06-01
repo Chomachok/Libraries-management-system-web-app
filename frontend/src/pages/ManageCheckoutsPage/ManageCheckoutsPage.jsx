@@ -30,21 +30,21 @@ export default function ManageCheckoutsPage() {
     } catch (err) { alert(err.response?.data?.error || 'Ошибка'); }
   };
 
-  if (chLoading) return <p>Загрузка...</p>;
-  if (chError) return <p style={{ color: 'var(--accent-hover)' }}>Ошибка загрузки выдач: {chError}</p>;
+  if (chLoading) return <p style={{ padding: '2rem' }}>Загрузка...</p>;
+  if (chError) return <p style={{ padding: '2rem', color: 'var(--color-accent-hover)' }}>Ошибка загрузки выдач</p>;
 
   const totalPages = Math.ceil((checkouts?.length || 0) / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedCheckouts = Array.isArray(checkouts) ? checkouts.slice(startIndex, startIndex + ITEMS_PER_PAGE) : [];
 
   return (
-    <div>
-      <h1>Управление выдачами</h1>
-      <button className="btn-accent" onClick={() => setModalOpen(true)}>+ Новая выдача</button>
+    <div style={{ padding: '2rem' }}>
+      <h1>Учёт выдач</h1>
+      <button onClick={() => setModalOpen(true)} style={{ marginBottom: '1rem' }}>+ Новая выдача</button>
 
-      <div className="grid" style={{ marginTop: '1rem', gridTemplateColumns: '1fr' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         {paginatedCheckouts.map(c => (
-          <div key={c.id} className="card">
+          <div key={c.id} className="card" style={{ padding: '1.5rem' }}>
             <p><strong>Книга:</strong> {c.bookTitle}</p>
             <p><strong>Читатель:</strong> {c.userName}</p>
             <p>Выдана: {new Date(c.checkoutDate).toLocaleDateString()}</p>
@@ -52,7 +52,7 @@ export default function ManageCheckoutsPage() {
             {c.returnDate ? (
               <p>Возвращена: {new Date(c.returnDate).toLocaleDateString()}</p>
             ) : (
-              <button className="btn-accent" onClick={() => handleReturn(c.id)}>Принять возврат</button>
+              <button onClick={() => handleReturn(c.id)}>Принять возврат</button>
             )}
             {c.fineAmount > 0 && <p>Штраф: {c.fineAmount} руб.</p>}
           </div>
@@ -63,7 +63,7 @@ export default function ManageCheckoutsPage() {
 
       {modalOpen && (
         <Modal title="Новая выдача" onClose={() => setModalOpen(false)}>
-          <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }} onSubmit={handleIssue}>
+          <form onSubmit={handleIssue} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <select value={issueForm.userId} onChange={e => setIssueForm({...issueForm, userId: e.target.value})} required>
               <option value="">Выберите читателя</option>
               {Array.isArray(readers) && readers.map(r => <option key={r.id} value={r.id}>{r.fullName}</option>)}
@@ -72,8 +72,8 @@ export default function ManageCheckoutsPage() {
               <option value="">Выберите книгу</option>
               {Array.isArray(books) && books.filter(b => b.availableCopies > 0).map(b => <option key={b.id} value={b.id}>{b.title} (доступно {b.availableCopies})</option>)}
             </select>
-            <input type="number" value={issueForm.durationDays} onChange={e => setIssueForm({...issueForm, durationDays: e.target.value})} min="1" required />
-            <button className="btn-accent" type="submit">Выдать</button>
+            <input type="number" value={issueForm.durationDays} onChange={e => setIssueForm({...issueForm, durationDays: e.target.value})} min="1" required placeholder="Дней" />
+            <button type="submit">Выдать</button>
           </form>
         </Modal>
       )}

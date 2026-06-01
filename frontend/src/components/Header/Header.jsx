@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './Header.module.css';
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -11,100 +12,81 @@ export default function Header() {
   const handleLogout = () => {
     logout();
     navigate('/');
-  }
+    setMobileMenuOpen(false);
+  };
 
   const closeMenu = () => setMobileMenuOpen(false);
 
   return (
     <header className={styles.header} data-testid="header">
-      <Link to="/" className={styles.logo} data-testid="header-logo">
-        <span className={styles.logoIcon}>📚</span>
-        <span className={styles.logoText}>Книжная полка</span>
-      </Link>
+      {/* Логотип */}
+      <div className={styles.logo}>
+        <Link to="/" className={styles.logoLink} onClick={closeMenu}>
+          📖 Книжный угол
+        </Link>
+      </div>
 
-      <nav className={styles.desktopNav} data-testid="nav">
-        {!user && (
-          <>
-            <Link to="/" datatest-id="nav-home">Главная</Link>
-            <Link to="/books" data-testid="nav-books">Каталог</Link>
-          </>
-        )}
-        {user?.role === 'Reader' && (
-          <>
-            <Link to="/books" data-testid="nav-catalog">Каталог</Link>
-            <Link to="/my-books" data-testid="nav-my-books">Мои книги</Link>
-            <Link to="/history" data-testid="nav-history">История</Link>
-          </>
-        )}
-        {user?.role === 'Librarian' && (
-          <>
-            <Link to="/dashboard" data-testid="nav-dashboard">Дашборд</Link>
-            <Link to="/manage-books" data-testid="nav-manage-books">Книги</Link>
-            <Link to="/manage-readers" data-testid="nav-manage-readers">Читатели</Link>
-            <Link to="/manage-checkouts" data-testid="nav-manage-checkouts">Выдачи</Link>
-          </>
-        )}
+      {/* Десктопная навигация */}
+      <nav className={styles.desktopNav}>
+        <Link to="/manage-books">Книжный стеллаж</Link>
+        {user?.role !== 'Librarian' && <Link to="/libraries">Наши уголки</Link>}
+        {user?.role === 'Reader' && <Link to="/my-books">Мой уголок</Link>}
       </nav>
 
-      <div className={styles.desktopAuth} data-testid="auth-section">
+      {/* Десктопные действия */}
+      <div className={styles.actions}>
+        <ThemeToggle />
         {user ? (
           <>
-            <Link to="/profile" data-testid="auth-profile-link">{user.fullName}</Link>
-            <button className={`btn-accent`} onClick={handleLogout} data-testid="logout-button">
+            <Link to="/profile" className={styles.loginBtn} data-testid="profile-btn">
+              Профиль
+            </Link>
+            <button onClick={handleLogout} className="btn-accent" style={{ marginLeft: '0.5rem' }}>
               Выйти
             </button>
           </>
         ) : (
-          <>
-            <Link to="/login" data-testid="login-link">Войти</Link>
-            <Link to="/register" data-testid="register-link">Регистрация</Link>
-          </>
+          <Link to="/login" className={styles.loginBtn}>
+            Войти
+          </Link>
         )}
       </div>
 
-      <button
-        className={styles.burger}
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        data-testid="burger-button"
-        aria-label="Меню"
-      >
+      {/* Бургер-кнопка */}
+      <button className={styles.burger} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
         <span />
         <span />
         <span />
       </button>
 
+      {/* Мобильное меню */}
       {mobileMenuOpen && (
-        <div className={styles.mobileMenu} data-testid="mobile-menu">
+        <div className={styles.mobileMenu}>
+          <button className={styles.closeBtn} onClick={closeMenu} aria-label="Закрыть меню">
+            ✕
+          </button>
           <nav className={styles.mobileNav}>
-            {!user && (
-              <>
-                <Link to="/" onClick={closeMenu} data-testid="mobile-nav-home">Главная</Link>
-                <Link to="/books" onClick={closeMenu} data-testid="mobile-nav-books">Каталог</Link>
-                <Link to="/login" onClick={closeMenu} data-testid="mobile-login-link">Войти</Link>
-                <Link to="/register" onClick={closeMenu} data-testid="mobile-register-link">Регистрация</Link>
-              </>
+            {/* Переключатель темы в мобильном меню */}
+            <div className={styles.mobileThemeToggle}>
+              <ThemeToggle />
+            </div>
+
+            <Link to="/books" onClick={closeMenu}>Книжный стеллаж</Link>
+            {user?.role !== 'Librarian' && (
+              <Link to="/libraries" onClick={closeMenu}>Наши уголки</Link>
             )}
             {user?.role === 'Reader' && (
-              <>
-                <Link to="/books" onClick={closeMenu} data-testid="mobile-nav-catalog">Каталог</Link>
-                <Link to="/my-books" onClick={closeMenu} data-testid="mobile-nav-my-books">Мои книги</Link>
-                <Link to="/history" onClick={closeMenu} data-testid="mobile-nav-history">История</Link>
-                <Link to="/profile" onClick={closeMenu} data-testid="mobile-profile-link">Профиль</Link>
-              </>
+              <Link to="/my-books" onClick={closeMenu}>Мой уголок</Link>
             )}
-            {user?.role === 'Librarian' && (
+            {user ? (
               <>
-                <Link to="/dashboard" onClick={closeMenu} data-testid="mobile-nav-dashboard">Дашборд</Link>
-                <Link to="/manage-books" onClick={closeMenu} data-testid="mobile-nav-manage-books">Книги</Link>
-                <Link to="/manage-readers" onClick={closeMenu} data-testid="mobile-nav-manage-readers">Читатели</Link>
-                <Link to="/manage-checkouts" onClick={closeMenu} data-testid="mobile-nav-manage-checkouts">Выдачи</Link>
-                <Link to="/profile" onClick={closeMenu} data-testid="mobile-profile-link">Профиль</Link>
+                <Link to="/profile" onClick={closeMenu}>Профиль</Link>
+                <button onClick={handleLogout} className={styles.mobileLogoutBtn}>
+                  Выйти
+                </button>
               </>
-            )}
-            {user && (
-              <button className={`btn-accent`} onClick={handleLogout} data-testid="mobile-logout-button">
-                Выйти
-              </button>
+            ) : (
+              <Link to="/login" onClick={closeMenu}>Войти</Link>
             )}
           </nav>
         </div>
