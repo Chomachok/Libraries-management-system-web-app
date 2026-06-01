@@ -1,0 +1,58 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(61, 52, 46, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.dialog {
+  background: var(--color-card-bg);
+  border-radius: 6px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+  font-family: var(--font-body);
+}
+
+.dialog h3 {
+  margin-bottom: 0.5rem;
+  font-family: var(--font-heading);
+}
+
+.dialog p {
+  margin-bottom: 1.5rem;
+  color: var(--color-text-main);
+  opacity: 0.9;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.cancelBtn {
+  background: var(--color-accent-secondary);
+  color: var(--color-text-main);
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.5rem;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background 0.3s;
+}
+
+.cancelBtn:hover {
+  background: var(--color-border);
+}

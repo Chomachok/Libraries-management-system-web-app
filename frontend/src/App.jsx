@@ -13,6 +13,8 @@ import DashboardPage from './pages/DashboardPage/DashboardPage';
 import ManageBooksPage from './pages/ManageBooksPage/ManageBooksPage';
 import ManageReadersPage from './pages/ManageReadersPage/ManageReadersPage';
 import ManageCheckoutsPage from './pages/ManageCheckoutsPage/ManageCheckoutsPage';
+import { NotificationProvider } from './contexts/NotificationContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 function PageWrapper({ children }) {
   return <div className="page-enter">{children}</div>;
@@ -23,125 +25,127 @@ export default function App() {
 
   return (
     <>
-      <Header />
-      <main style={{ padding: '1rem 2rem' }}>
-        <Routes location={location}>
-          <Route
-            path="/"
-            element={
-              <PageWrapper key={location.pathname}>
-                <HomePage />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <PageWrapper key={location.pathname}>
-                <LoginPage />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/register"
-            element={
-              <PageWrapper key={location.pathname}>
-                <RegisterPage />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/libraries"
-            element={
-              <PageWrapper key={location.pathname}>
-                <LibrariesPage />
-              </PageWrapper>
-            }
-          />
-          <Route
-            path="/books"
-            element={
-              <PageWrapper key={location.pathname}>
-                <BooksPage />
-              </PageWrapper>
-            }
-          />
+      <NotificationProvider>
+        <Header />
+          <main style={{ padding: '1rem 2rem' }}>
+            <Routes location={location}>
+              <Route
+                path="/"
+                element={
+                  <PageWrapper key={location.pathname}>
+                    <HomePage />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <PageWrapper key={location.pathname}>
+                    <LoginPage />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/register"
+                element={
+                  <PageWrapper key={location.pathname}>
+                    <RegisterPage />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/libraries"
+                element={
+                  <PageWrapper key={location.pathname}>
+                    <LibrariesPage />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/books"
+                element={
+                  <PageWrapper key={location.pathname}>
+                    <BooksPage />
+                  </PageWrapper>
+                }
+              />
 
-          {/* Читатель */}
-          <Route
-            path="/my-books"
-            element={
-              <ProtectedRoute roles={['Reader']}>
-                <PageWrapper key={location.pathname}>
-                  <MyBooksPage />
-                </PageWrapper>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/history"
-            element={
-              <ProtectedRoute roles={['Reader']}>
-                <PageWrapper key={location.pathname}>
-                  <HistoryPage />
-                </PageWrapper>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute roles={['Reader', 'Librarian']}>
-                <PageWrapper key={location.pathname}>
-                  <ProfilePage />
-                </PageWrapper>
-              </ProtectedRoute>
-            }
-          />
+              {/* Читатель */}
+              <Route
+                path="/my-books"
+                element={
+                  <ProtectedRoute roles={['Reader']}>
+                    <PageWrapper key={location.pathname}>
+                      <MyBooksPage />
+                    </PageWrapper>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/history"
+                element={
+                  <ProtectedRoute roles={['Reader']}>
+                    <PageWrapper key={location.pathname}>
+                      <HistoryPage />
+                    </PageWrapper>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute roles={['Reader', 'Librarian']}>
+                    <PageWrapper key={location.pathname}>
+                      <ProfilePage />
+                    </PageWrapper>
+                  </ProtectedRoute>
+                }
+              />
 
-          {/* Библиотекарь */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute roles={['Librarian']}>
-                <PageWrapper key={location.pathname}>
-                  <DashboardPage />
-                </PageWrapper>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manage-books"
-            element={
-              <ProtectedRoute roles={['Librarian']}>
-                <PageWrapper key={location.pathname}>
-                  <ManageBooksPage />
-                </PageWrapper>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manage-readers"
-            element={
-              <ProtectedRoute roles={['Librarian']}>
-                <PageWrapper key={location.pathname}>
-                  <ManageReadersPage />
-                </PageWrapper>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/manage-checkouts"
-            element={
-              <ProtectedRoute roles={['Librarian']}>
-                <PageWrapper key={location.pathname}>
-                  <ManageCheckoutsPage />
-                </PageWrapper>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </main>
+              {/* Библиотекарь */}
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute roles={['Librarian']}>
+                    <PageWrapper key={location.pathname}>
+                      <DashboardPage />
+                    </PageWrapper>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-books"
+                element={
+                  <ProtectedRoute roles={['Librarian']}>
+                    <PageWrapper key={location.pathname}>
+                      <ManageBooksPage />
+                    </PageWrapper>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-readers"
+                element={
+                  <ProtectedRoute roles={['Librarian']}>
+                    <PageWrapper key={location.pathname}>
+                      <ManageReadersPage />
+                    </PageWrapper>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manage-checkouts"
+                element={
+                  <ProtectedRoute roles={['Librarian']}>
+                    <PageWrapper key={location.pathname}>
+                      <ManageCheckoutsPage />
+                    </PageWrapper>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </main>
+      </NotificationProvider>
     </>
   );
 }

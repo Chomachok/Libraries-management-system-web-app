@@ -1,6 +1,7 @@
 import { useApi } from '../../hooks/useApi';
 import api from '../../api/api';
 import { interfaceTexts } from '../../locale/interfaceTexts';
+import { useNotification } from '../../contexts/NotificationContext';
 
 export default function MyBooksPage() {
   const [checkouts, loading, error, refetch] = useApi('/checkouts/my-active');
@@ -8,9 +9,10 @@ export default function MyBooksPage() {
   const returnBook = async (checkoutId) => {
     try {
       await api.post(`/checkouts/return/${checkoutId}`);
+      showToast('Книга возвращена.', 'success');
       refetch();
     } catch (err) {
-      alert(err.response?.data?.error || 'Ошибка');
+      showToast(err.response?.data?.error || 'Ошибка возврата', 'error');
     }
   };
 

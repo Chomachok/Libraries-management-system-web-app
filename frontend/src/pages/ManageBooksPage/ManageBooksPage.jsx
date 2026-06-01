@@ -5,6 +5,7 @@ import Pagination from '../../components/Pagination/Pagination';
 import BookCover from '../../components/BookCover/BookCover';
 import api from '../../api/api';
 import styles from './ManageBooksPage.module.css';
+import { useNotification } from '../../contexts/NotificationContext';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -23,6 +24,7 @@ export default function ManageBooksPage() {
     coverImageUrl: '',
   });
   const [currentPage, setCurrentPage] = useState(1);
+  const { showToast, showConfirm } = useNotification();
 
   // Загрузка книг при изменении поиска
   useState(() => {
@@ -30,13 +32,14 @@ export default function ManageBooksPage() {
   }, [search, fetchBooks]);
 
   const handleDelete = async (id) => {
-    if (window.confirm('Удалить книгу?')) {
-      try {
-        await api.delete(`/books/${id}`);
-        fetchBooks({ search });
-      } catch (err) {
-        alert(err.response?.data?.error || 'Ошибка');
-      }
+    const confirmed = await showConfirm('Вы действительно хотите удалить книгу?', 'Удаление');
+    if (!confirmed) return;
+    try {
+      await api.delete(`/books/${id}`);
+      showToast('Книга удалена.', 'success');
+      fetchBooks({ search });
+    } catch (err) {
+      showToast(err.response?.data?.error || 'Ошибка удаления', 'error');
     }
   };
 
@@ -73,13 +76,15 @@ export default function ManageBooksPage() {
     try {
       if (editingBook) {
         await api.put(`/books/${editingBook.id}`, form);
+        showToast('Книга обновлена.', 'success');
       } else {
         await api.post('/books', form);
+        showToast('Книга добавлена в фонд.', 'success');
       }
       setModalOpen(false);
       fetchBooks({ search });
     } catch (err) {
-      alert(err.response?.data?.error || 'Ошибка');
+      showToast(err.response?.data?.error || 'Ошибка сохранения', 'error');
     }
   };
 
