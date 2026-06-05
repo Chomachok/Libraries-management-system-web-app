@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useApi } from '../../hooks/useApi';
 import Modal from '../../components/Modal/Modal';
 import Pagination from '../../components/Pagination/Pagination';
@@ -27,7 +27,7 @@ export default function ManageBooksPage() {
   const { showToast, showConfirm } = useNotification();
 
   // Загрузка книг при изменении поиска
-  useState(() => {
+  useEffect(() => {
     fetchBooks({ search });
   }, [search, fetchBooks]);
 
