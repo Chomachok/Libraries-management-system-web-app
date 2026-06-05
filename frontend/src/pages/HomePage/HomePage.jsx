@@ -35,9 +35,25 @@ export default function HomePage() {
   const handleBorrow = async (bookId) => {
     try {
       await api.post(`/checkouts/borrow/${bookId}`);
-      alert(interfaceTexts.booking.success);
+      showToast('Книга отложена!', 'success');
+      // Обновляем данные книги вечера (если она одна)
+      const updatedBooks = await api.get('/books');
+      if (Array.isArray(updatedBooks.data)) {
+        const stillAvailable = updatedBooks.data.find(b => b.id === bookId);
+        if (stillAvailable && stillAvailable.availableCopies > 0) {
+          setFeaturedBook(stillAvailable);
+        } else {
+          // Книга закончилась – выбрать новую
+          const availableBooks = updatedBooks.data.filter(b => b.availableCopies > 0);
+          if (availableBooks.length > 0) {
+            setFeaturedBook(availableBooks[Math.floor(Math.random() * availableBooks.length)]);
+          } else {
+            setFeaturedBook(null);
+          }
+        }
+      }
     } catch (err) {
-      alert(err.response?.data?.error || 'Ошибка');
+      showToast(err.response?.data?.error || 'Ошибка', 'error');
     }
   };
 
