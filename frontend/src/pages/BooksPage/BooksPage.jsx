@@ -101,7 +101,7 @@ export default function BooksPage() {
               </p>
               <p className={styles.library}>{book.libraryName}</p>
               {user?.role === 'Reader' && book.availableCopies > 0 && (
-                <button onClick={() => borrowBook(book.id)} className="btn-accent">
+                <button onClick={() => borrowBook(book.id)} className={`btn-accent ${styles.borrowBtn}`}>
                   Отложить в мой уголок
                 </button>
               )}
