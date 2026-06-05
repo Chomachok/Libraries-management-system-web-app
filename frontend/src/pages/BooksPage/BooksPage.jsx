@@ -1,29 +1,31 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import api from '../../api/api';
+import { useNotification } from '../../contexts/NotificationContext';
 import { useApi } from '../../hooks/useApi';
+import api from '../../api/api';
 import BookCover from '../../components/BookCover/BookCover';
 import styles from './BooksPage.module.css';
-import { useNotification } from '../../contexts/NotificationContext';
 
 export default function BooksPage() {
   const { user } = useAuth();
+  const { showToast } = useNotification();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialSearch = searchParams.get('search') || '';
   const initialLibraryId = searchParams.get('libraryId') || '';
 
   const [filters, setFilters] = useState({ libraryId: initialLibraryId, search: initialSearch });
   const [libraries] = useApi('/libraries');
-  const [books, bookLoading, bookError, fetchBooks] = useApi('/books', { immediate: false });
+  const [books, bookLoading, bookError, fetchBooks, setBooks] = useApi('/books', { immediate: false });
 
-  // Если библиотекарь — сразу показываем только его библиотеку
+  // Если библиотекарь – фиксируем библиотеку
   useEffect(() => {
     if (user?.role === 'Librarian' && user.libraryId) {
       setFilters(prev => ({ ...prev, libraryId: user.libraryId.toString() }));
     }
   }, [user]);
 
+  // Загрузка книг при изменении фильтров
   useEffect(() => {
     const params = {};
     if (filters.libraryId) params.libraryId = filters.libraryId;
@@ -31,6 +33,7 @@ export default function BooksPage() {
     fetchBooks(params);
   }, [filters, fetchBooks]);
 
+  // Синхронизация с URL
   useEffect(() => {
     const params = {};
     if (filters.search) params.search = filters.search;
@@ -39,11 +42,36 @@ export default function BooksPage() {
   }, [filters, setSearchParams]);
 
   const borrowBook = async (bookId) => {
+    // Оптимистичное обновление
+    setBooks(prevBooks => {
+      if (!Array.isArray(prevBooks)) return prevBooks;
+      return prevBooks.map(book =>
+        book.id === bookId
+          ? { ...book, availableCopies: Math.max(0, book.availableCopies - 1) }
+          : book
+      );
+    });
+
     try {
       await api.post(`/checkouts/borrow/${bookId}`);
       showToast('Книга отложена в ваш уголок!', 'success');
-      fetchBooks(filters);
+      // Актуализация данных с сервера
+      const params = {};
+      if (filters.libraryId) params.libraryId = filters.libraryId;
+      if (filters.search) params.search = filters.search;
+      // Добавим случайный параметр для инвалидации кэша
+      params._t = Date.now();
+      fetchBooks(params);
     } catch (err) {
+      // Откат
+      setBooks(prevBooks => {
+        if (!Array.isArray(prevBooks)) return prevBooks;
+        return prevBooks.map(book =>
+          book.id === bookId
+            ? { ...book, availableCopies: book.availableCopies + 1 }
+            : book
+        );
+      });
       showToast(err.response?.data?.error || 'Не удалось взять книгу', 'error');
     }
   };
