@@ -141,6 +141,7 @@ public class CheckoutsController(ICheckoutService checkoutService) : ControllerB
     /// Получить идентификатор текущего пользователя из claims.
     /// </summary>
     private int GetUserId() => int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+    
     /// <summary>
     /// Получить идентификатор библиотеки текущего пользователя из claims.
     /// </summary>
