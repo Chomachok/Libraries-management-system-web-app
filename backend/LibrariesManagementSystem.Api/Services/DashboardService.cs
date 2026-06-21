@@ -5,8 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibrariesManagementSystem.Api.Services;
 
+/// <summary>
+/// Реализация сервиса для получения сводной статистики панели управления библиотеки.
+/// </summary>
 public class DashboardService(AppDbContext db) : IDashboardService
 {
+    /// <summary>
+    /// Получить ключевые показатели библиотеки: количество книг, читателей, активных и просроченных выдач.
+    /// </summary>
+    /// <param name="librarianLibraryId">ID библиотеки.</param>
+    /// <returns>Объект <see cref="DashboardDto"/> со статистикой. Если библиотека не найдена, возвращается пустой объект.</returns>
     public async Task<DashboardDto> GetLibraryStats(int librarianLibraryId)
     {
         var now = DateTime.UtcNow;

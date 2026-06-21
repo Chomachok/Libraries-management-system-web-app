@@ -3,8 +3,16 @@ using System.Text.Json;
 
 namespace LibrariesManagementSystem.Api.Middleware;
 
+/// <summary>
+/// Промежуточное ПО для глобальной обработки необработанных исключений.
+/// Логирует ошибку и возвращает клиенту JSON с сообщением (и стектрейсом в режиме разработки).
+/// </summary>
 public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IWebHostEnvironment env)
 {
+    /// <summary>
+    /// Обрабатывает HTTP-запрос, перехватывая все необработанные исключения.
+    /// </summary>
+    /// <param name="context">Контекст текущего HTTP-запроса.</param>
     public async Task InvokeAsync(HttpContext context)
     {
         try

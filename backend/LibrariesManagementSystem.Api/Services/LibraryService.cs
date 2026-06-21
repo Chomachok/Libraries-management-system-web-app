@@ -5,8 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibrariesManagementSystem.Api.Services;
 
+/// <summary>
+/// Реализация сервиса для получения списка библиотек.
+/// </summary>
 public class LibraryService(AppDbContext db) : ILibraryService
 {
+    /// <summary>
+    /// Получить список всех библиотек системы.
+    /// </summary>
+    /// <returns>Список объектов <see cref="LibraryDto"/>.</returns>
     public async Task<List<LibraryDto>> GetAll()
     {
         return await db.Libraries

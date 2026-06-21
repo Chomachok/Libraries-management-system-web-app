@@ -10,8 +10,18 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace LibrariesManagementSystem.Api.Services;
 
+/// <summary>
+/// Реализация сервиса аутентификации: регистрация, вход, обновление токенов.
+/// Использует BCrypt для хеширования паролей и JWT для токенов доступа.
+/// </summary>
 public class AuthService(AppDbContext db, ITokenValidator tokenValidator, IConfiguration config) : IAuthService
 {
+    /// <summary>
+    /// Регистрирует нового пользователя с ролью Reader и возвращает access- и refresh-токены.
+    /// </summary>
+    /// <param name="dto">Данные для регистрации.</param>
+    /// <returns>Кортеж: <see cref="AuthResponseDto"/> с токеном и информацией о пользователе, и refresh-токен.</returns>
+    /// <exception cref="InvalidOperationException">Если email уже занят или указанная библиотека не найдена.</exception>
     public async Task<(AuthResponseDto AuthResponse, string RefreshToken)> Register(RegisterDto dto)
     {
         if (await db.Users.AnyAsync(u => u.Email == dto.Email))
@@ -48,6 +58,12 @@ public class AuthService(AppDbContext db, ITokenValidator tokenValidator, IConfi
         return (authResponse, refreshToken);
     }
 
+    /// <summary>
+    /// Аутентифицирует пользователя по email и паролю и возвращает токены.
+    /// </summary>
+    /// <param name="dto">Учетные данные (email и пароль).</param>
+    /// <returns>Кортеж: <see cref="AuthResponseDto"/> с токеном и информацией о пользователе, и refresh-токен.</returns>
+    /// <exception cref="UnauthorizedAccessException">Если email не найден или пароль неверен.</exception>
     public async Task<(AuthResponseDto AuthResponse, string RefreshToken)> Login(LoginDto dto)
     {
         var user = await db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
@@ -68,7 +84,14 @@ public class AuthService(AppDbContext db, ITokenValidator tokenValidator, IConfi
         
         return (authResponse, refreshToken);
     }
-
+    
+    /// <summary>
+    /// Обновляет пару токенов (access и refresh) по валидному refresh-токену.
+    /// Выполняет ротацию refresh-токена.
+    /// </summary>
+    /// <param name="refreshToken">Текущий refresh-токен.</param>
+    /// <returns>Кортеж из нового <see cref="AuthResponseDto"/> (с новым access-токеном) и нового refresh-токена;
+    /// если токен невалиден - возвращает (null, null).</returns>
     public async Task<(AuthResponseDto? AuthResponse, string? RefreshToken)> RefreshAccessToken(string refreshToken)
     {
         // 1. Валидация refresh‑токена (подпись, срок, тип)
@@ -101,7 +124,7 @@ public class AuthService(AppDbContext db, ITokenValidator tokenValidator, IConfi
 
         return (authResponse, newRefreshToken);
     }
-
+    
     private AuthResponseDto GenerateToken(User user)
     {
         var secret = config["JWT_SECRET"] ?? throw new Exception("JWT_SECRET not set");
@@ -136,19 +159,34 @@ public class AuthService(AppDbContext db, ITokenValidator tokenValidator, IConfi
         };
     }
     
-    // Генерация access‑токена (15 минут)
+    /// <summary>
+    /// Генерирует JWT-токен доступа (access-токен) для пользователя.
+    /// </summary>
+    /// <param name="user">Пользователь, для которого создаётся токен.</param>
+    /// <returns>Строка access-токена.</returns>
     private string GenerateAccessToken(User user)
     {
         return GenerateJwt(user, TimeSpan.FromMinutes(15), "access");
     }
-
-// Генерация refresh‑токена (7 дней)
+    
+    /// <summary>
+    /// Генерирует JWT-токен обновления (refresh-токен) для пользователя.
+    /// </summary>
+    /// <param name="user">Пользователь, для которого создаётся токен.</param>
+    /// <returns>Строка refresh-токена.</returns>
     private string GenerateRefreshToken(User user)
     {
         return GenerateJwt(user, TimeSpan.FromDays(7), "refresh");
     }
-
-// Универсальный метод создания JWT
+    
+    /// <summary>
+    /// Универсальный метод создания JWT с заданным временем жизни и типом.
+    /// </summary>
+    /// <param name="user">Пользователь.</param>
+    /// <param name="lifetime">Срок действия токена.</param>
+    /// <param name="tokenType">Тип токена ("access" или "refresh").</param>
+    /// <returns>Подписанный JWT в виде строки.</returns>
+    /// <exception cref="InvalidOperationException">Если секретный ключ не задан в конфигурации.</exception>
     private string GenerateJwt(User user, TimeSpan lifetime, string tokenType)
     {
         var secret = config["JWT_SECRET"];
